@@ -13,6 +13,18 @@ export class EventEmitter<Events extends Record<string, Handler>> {
   }
 
   emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>): void {
-    this.handlers.get(event)?.forEach(fn => fn(...args));
+    const handlers = this.handlers.get(event);
+    if (!handlers) return;
+    for (const fn of handlers) {
+      try {
+        fn(...args);
+      } catch (err) {
+        console.error(`[SDK] Error in handler for "${String(event)}":`, err);
+      }
+    }
+  }
+
+  removeAllListeners(): void {
+    this.handlers.clear();
   }
 }

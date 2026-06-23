@@ -46,9 +46,10 @@ export interface RealtimeConfig {
   maxQueueSize?: number;
   logLevel?: LogLevel;
   heartbeatTimeout?: number;
+  refreshUrl?: string;
 }
 
-export interface RealtimeEvents {
+export interface RealtimeEvents extends Record<string, (...args: any[]) => void> {
   connected: () => void;
   disconnected: (reason: string) => void;
   reconnecting: (attempt: number) => void;
@@ -60,7 +61,6 @@ export interface RealtimeEvents {
   community_message: (message: ServerMessage) => void;
   group_join: (message: ServerMessage) => void;
   error: (error: RealtimeError) => void;
-  [key: string]: (...args: any[]) => void;
 }
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "silent";
